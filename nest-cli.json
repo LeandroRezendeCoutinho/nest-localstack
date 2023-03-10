@@ -1,5 +1,31 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src"
+  "sourceRoot": "apps/nest-localstack/src",
+  "monorepo": true,
+  "root": "apps/nest-localstack",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/nest-localstack/tsconfig.app.json"
+  },
+  "projects": {
+    "nest-localstack": {
+      "type": "application",
+      "root": "apps/nest-localstack",
+      "entryFile": "main",
+      "sourceRoot": "apps/nest-localstack/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/nest-localstack/tsconfig.app.json"
+      }
+    },
+    "consumer": {
+      "type": "application",
+      "root": "apps/consumer",
+      "entryFile": "main",
+      "sourceRoot": "apps/consumer/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/consumer/tsconfig.app.json"
+      }
+    }
+  }
 }
