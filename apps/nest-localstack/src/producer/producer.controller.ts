@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
+import { Controller, Post, Body } from '@nestjs/common'
 import { ProducerService } from './producer.service'
 import { ProducerDto } from './dto/producer.dto'
 
