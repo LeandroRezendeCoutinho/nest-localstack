@@ -5,19 +5,15 @@ import { Injectable } from "@nestjs/common"
 export class QueueService {
     private sqsClient: SQSClient
     private command: CreateQueueCommand
-    private sqsConfig = {
-        region: 'us-east-1',
-        endpoint: 'http://localhost:4566/',
-    }
 
     async listQueues() {
-        const client = new SQSClient(this.sqsConfig)
+        const client = SqsClientFactory.getSqsClient()
         const command = new ListQueuesCommand({ QueueNamePrefix: 'test' })
         return await client.send(command)
     }
 
     async createQueue() {
-        this.sqsClient = new SQSClient(this.sqsConfig)
+        this.sqsClient = SqsClientFactory.getSqsClient()
         this.command = new CreateQueueCommand({ QueueName: 'test-queue' })
         const response = await this.sqsClient.send(this.command)
         if (response.QueueUrl) {
@@ -27,15 +23,29 @@ export class QueueService {
 
     async sendMessage(body: any) {
         const queueLlist = await this.listQueues()
-        if (queueLlist.QueueUrls?.length === 0)
+        if (!queueLlist || !queueLlist.QueueUrls || queueLlist.QueueUrls.length === 0)
             await this.createQueue()
 
-        const sqsClient = new SQSClient(this.sqsConfig)
+        const sqsClient = SqsClientFactory.getSqsClient()
         const command = new SendMessageCommand({
             QueueUrl: 'http://localhost:4566/000000000000/test-queue',
             MessageBody: body.message
         })
         const response = await sqsClient.send(command)
         return response
+    }
+}
+
+class SqsClientFactory {
+    private static sqsClient: SQSClient
+
+    static getSqsClient() {
+        if (!this.sqsClient) {
+            this.sqsClient = new SQSClient({
+                region: 'us-east-1',
+                endpoint: 'http://localhost:4566/',
+            })
+        }
+        return this.sqsClient
     }
 }
