@@ -1,3 +1,4 @@
+import { ReceiveMessageCommandOutput } from '@aws-sdk/client-sqs'
 import { Controller, Get } from '@nestjs/common'
 import { ConsumerService } from './consumer.service'
 
@@ -6,7 +7,7 @@ export class ConsumerController {
   constructor(private readonly consumerService: ConsumerService) {}
 
   @Get()
-  getHello(): string {
-    return this.consumerService.getHello()
+  consume(): Promise<ReceiveMessageCommandOutput> {
+    return this.consumerService.consume()
   }
 }
