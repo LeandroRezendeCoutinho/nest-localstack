@@ -2,7 +2,7 @@ import { ReceiveMessageCommandOutput } from '@aws-sdk/client-sqs'
 import { Controller, Get } from '@nestjs/common'
 import { ConsumerService } from './consumer.service'
 
-@Controller()
+@Controller('consumer')
 export class ConsumerController {
   constructor(private readonly consumerService: ConsumerService) {}
 
